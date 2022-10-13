@@ -37,6 +37,7 @@ class GameLevelsScrollingMap extends StatefulWidget {
   Duration autoScrollDuration = const Duration(milliseconds: 1000);
 
   Widget? backgroundImageWidget;
+  Function? onAutoScrollCompleted;
 
   GameLevelsScrollingMap({
     this.imageUrl = "",
@@ -72,6 +73,7 @@ class GameLevelsScrollingMap extends StatefulWidget {
     this.backgroundImageWidget,
     this.autoScrollToEnd = false,
     this.autoScrollDuration = const Duration(milliseconds: 1000),
+    this.onAutoScrollCompleted,
     Key? key,
   }) : super(key: key) {
     isScrollable = true;
@@ -99,11 +101,21 @@ class _GameLevelsScrollingMapState extends State<GameLevelsScrollingMap> {
       if (widget.isScrollable) {
         int currentIndex = widget.points!.indexWhere((point) => point.isCurrent!);
         if (currentIndex != -1 && newX_values!.isNotEmpty) {
-          _scrollController.animateTo(widget.autoScrollToEnd ? imageHeight : newX_values![currentIndex],
-              duration: widget.autoScrollDuration, curve: Curves.easeIn);
+          _scrollController
+              .animateTo(widget.autoScrollToEnd ? imageHeight : newX_values![currentIndex],
+                  duration: widget.autoScrollDuration, curve: Curves.easeIn)
+              .then(
+                (value) => _onAutoScrollCompleted,
+              );
         }
       }
     });
+  }
+
+  void _onAutoScrollCompleted() {
+    if (widget.onAutoScrollCompleted != null) {
+      widget.onAutoScrollCompleted!();
+    }
   }
 
   void initDeviceDimensions() {
