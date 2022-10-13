@@ -105,7 +105,7 @@ class _GameLevelsScrollingMapState extends State<GameLevelsScrollingMap> {
               .animateTo(widget.autoScrollToEnd ? imageHeight : newX_values![currentIndex],
                   duration: widget.autoScrollDuration, curve: Curves.easeIn)
               .then(
-                (value) => _onAutoScrollCompleted,
+                (value) => _onAutoScrollCompleted(),
               );
         }
       }
